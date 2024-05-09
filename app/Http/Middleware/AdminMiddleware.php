@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -19,7 +20,8 @@ class AdminMiddleware
        /**  @var APP\Models\User */
         if(Auth::check()){
             $user =Auth::user();
-            if($user->hasRole(['super-admin','admin','user'])){
+            $roles = Role::all();
+            if($user->hasRole($roles)){
                 
                  return $next($request);
             }

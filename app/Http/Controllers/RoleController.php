@@ -36,7 +36,8 @@ class RoleController extends Controller  implements HasMiddleware
 
     public function index(){
     
-        $Roles = Role::all();
+        $Roles = Role::with('permissions')->get();
+
         return view('pages.role.index',  ['roles' => $Roles]);
     }  
     public function create(){

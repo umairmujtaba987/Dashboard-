@@ -37,7 +37,8 @@
                   <tr>
                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">ID</th>
                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Name</th>
-                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Action</th>
+                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Have Permissions</th>
+                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Action</th>
                      
 
                     <th class="text-secondary opacity-7"></th>
@@ -49,6 +50,11 @@
                  <tr>
                     <td class="text-center">{{$role->id}}</td>
                     <td class="text-center">{{$role->name}}</td>
+                    <td><ul>
+                      @foreach ($role->permissions as $permission)
+                      <li>{{ $permission->name }}</li>
+                  @endforeach
+                </ul>
                     <td class="text-center">
                       @can('create role')
                         <a href="{{url('roles/'.$role->id.'/give-permissions')}}" class="btn btn-success">Add / Edit Role Permission</a>

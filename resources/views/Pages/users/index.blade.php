@@ -51,7 +51,9 @@
                   @if(Auth::user()->id != $user->id)
                  <tr class="md-2">
                     <td class="text-center">{{$user->id}}</td>
-                    <td class="text-center">{{$user->name}}</td>
+                    <td class="text-center">
+                      <a href="{{url('users/'.$user->id.'/view')}}" class="btn "> {{$user->name}}</a>
+                     </td>
                     <td class="text-center">{{$user->email}}</td>
                     <td class="text-center">
                       @if(!empty($user->getRoleNames()))
@@ -102,6 +104,7 @@
                  @endforeach
                 </tbody>
               </table>
+               
             </div>
           </div>
         </div>
@@ -109,6 +112,9 @@
     </div>
   
   </div>
-
+  <div class="container text-center">
+                  
+    {{ $users->links() }}
+</div>
   @endsection
   
