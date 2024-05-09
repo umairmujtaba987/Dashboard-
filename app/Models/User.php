@@ -46,4 +46,18 @@ class User extends Authenticatable implements MustVerifyEmail
         ];
     }
 
+    public function usersPosts() {
+        return $this->hasMany(Post::class, 'user_id');
+    }
+
+protected static function boot(){
+    parent::boot();
+    static::creating(function($user){
+        
+        // Assign permissions for read, write, update, and delete
+        $user->givePermissionTo(['create post', 'view post', 'update post', 'delete post']);
+        $user->assignRole(['default']);
+    });
+}
+
 }

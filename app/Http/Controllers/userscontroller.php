@@ -23,6 +23,7 @@ use App\Notifications\AccountActivatedNotification;
  
 class userscontroller extends Controller  implements HasMiddleware
 {
+    
     public static function middleware(): array
     {
         return [
@@ -38,12 +39,20 @@ class userscontroller extends Controller  implements HasMiddleware
         ];
     }
 
-   public function index()
+    public function index()
+    {
+     $users = User::paginate(5);
+     return view('pages.users.index',[
+         'users' => $users
+     ]);
+    }
+    public function view(User $userId)
    {
-    $users = User::get();
-    return view('pages.users.index',[
-        'users' => $users
+     
+    return view('pages.users.user',[
+        'user' => $userId
     ]);
+    
    }
    public function create(){
     $roles = Role::pluck('name','name')->all();
@@ -58,7 +67,7 @@ class userscontroller extends Controller  implements HasMiddleware
             'name' => ['required', 'min:3' , Rule::unique('users', 'name')],
             'email' => 'required|email|unique:users' ,
             'password' => 'required|min:8', 
-            'roles' => 'required'
+            //'roles' => 'required'
         ]);
 
         if($incommingFields->passes()){
@@ -70,6 +79,7 @@ class userscontroller extends Controller  implements HasMiddleware
            
             $user->status = 'Inactive';
             $user->remember_token = Str::random(40);
+
             $user->syncRoles($request->roles);
             $user->save(); 
 

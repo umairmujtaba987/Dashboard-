@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PostController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\LoginController;
@@ -43,6 +44,8 @@ Route::group(['middleware' => ['isAdmin']],function(){
 
 Route::resource('users', userscontroller::class);
 Route::get('users/{userId}/delete', [userscontroller::class, 'destroy']);
+
+Route::get('users/{userId}/view', [userscontroller::class, 'view']);
 Route::Post('verify_token/{token}', [userscontroller::class ,'verify'])->name('account.verify_token');
        
 Route::resource('roles', RoleController::class)->middleware('auth');
@@ -53,6 +56,11 @@ Route::put('roles/{roleId}/give-permissions', [RoleController::class, 'givePermi
 
 Route::resource('permissions', PermissionController::class);
 Route::get('permissions/{permissionId}/delete', [PermissionController::class, 'destroy']);
+
+
+Route::resource('posts', PostController::class);
+Route::get('posts/{post}/delete', [PostController::class, 'destroy']);
+Route::get('posts/publishposts', [PostController::class, 'publish']);
 
 });
 /*
