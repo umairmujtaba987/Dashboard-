@@ -33,7 +33,7 @@ class PostController extends Controller implements HasMiddleware
     {
          
          $posts = Post::where('status', 'publish')->get();
-         $posts = Post::with('user')->get();
+        // $posts = Post::with('user')->get();
 
          
         return view('pages.posts.publish',[
@@ -130,7 +130,21 @@ class PostController extends Controller implements HasMiddleware
     }
 
 
-   
+    public function update_status(Post $post ){
+         
+
+        if($post->status == 'publish')
+        {
+            $post->status = 'draft';
+        }
+        else{
+            $post->status = 'publish';
+
+        }
+        $post->update();
+        return redirect()->back()->withInput()->with('status', 'Post updated successfully.');
+
+    }
 
    
 

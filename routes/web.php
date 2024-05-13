@@ -61,6 +61,7 @@ Route::get('permissions/{permissionId}/delete', [PermissionController::class, 'd
 Route::resource('posts', PostController::class);
 Route::get('posts/{post}/delete', [PostController::class, 'destroy']);
 Route::get('posts/publishposts', [PostController::class, 'publish']);
+Route::get('posts/{post}/update_status', [PostController::class, 'update_status']);
 
 });
 /*
