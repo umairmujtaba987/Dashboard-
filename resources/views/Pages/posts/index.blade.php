@@ -22,19 +22,28 @@
           </div>
  
     @foreach ($posts as $post)
-    <div class="container mt-4 card mb-3" style="background-color: #2e2d2d;">
-        <div class="card-body container border"style="color: #ffffff; ">
+    <div class="container mt-4 card mb-3" style="background-color: #d5f0ff;">
+        <div class="card-body container border"style="#000000 ">
             
-            <p class="card-text">Posted by: {{  $post->user->name }}</p>
+            <p class="card-text float-end"> 
+              @can('update post')
+              <a href="{{url('posts/'.$post->id.'/edit')}}" class="btn btn-primary ">Edit</a> 
+                @if ($post->status != 'publish')
+                  <a href="{{url('posts/'.$post->id.'/update_status')}}" class=" btn btn-primary ">Publish</a>
+             @else
+              <a href="{{url('posts/'.$post->id.'/update_status')}}" class="btn btn-secondary ">Un Publish</a>
+           @endif
+                @endcan
+                  @can('delete post')
+              <a href="{{url('posts/'.$post->id.'/delete')}}" class="btn btn-danger ">Delete</a> 
+               @endcan
+  
+            
+            </p> 
             <h3 class="card-title">{{$post['title']}}</h3>
-            <p class="card-text">{{$post['body']}}</p>
+            <p class="card-text ">{{$post['body']}}</p>
             
-            @can('update post')
-            <p><a href="{{url('posts/'.$post->id.'/edit')}}" class="btn btn-primary">Edit</a> 
-             @endcan
-                @can('delete post')
-            <a href="{{url('posts/'.$post->id.'/delete')}}" class="btn btn-secondary">Delete</a></p>
-             @endcan
+           
         </div>
     </div>
     
