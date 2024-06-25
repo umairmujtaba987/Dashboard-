@@ -5,12 +5,14 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role; 
+use App\Notifications\Notifications;
 use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Models\permission;  
-use Spatie\Permission\Middleware\PermissionMiddleware;
 
 use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Routing\Controllers\HasMiddleware;
+use Spatie\Permission\Middleware\PermissionMiddleware;
+
 class RoleController extends Controller  implements HasMiddleware
 {
     
@@ -51,9 +53,13 @@ class RoleController extends Controller  implements HasMiddleware
             'name' => ['required','string','unique:roles,name'
             ]
         ]);
+
         Role::create([
             'name' => $request->name
         ]);
+        
+        $message = ': Role has been create Successfully!';
+        auth()->user()->notify(new Notifications($request,$message));
         return redirect('roles')->with('status', 'Role create sussfully.');
     }
 
@@ -76,6 +82,9 @@ class RoleController extends Controller  implements HasMiddleware
         $role->update([
             'name' => $request->name
         ]);
+        $message = ': Role has been updated Successfully!';
+        auth()->user()->notify(new Notifications($request,$message));
+        
         return redirect('roles')->with('status', 'Role Updated successfully.');
    
     }
@@ -83,7 +92,11 @@ class RoleController extends Controller  implements HasMiddleware
     public function destroy($roleId){
         
         $role = Role::find($roleId);
+        $message = ': Role has been Delete Successfully!';
+        auth()->user()->notify(new Notifications($role,$message));
+        
         $role->delete();
+       
         return redirect('roles')->with('status', 'Role Deleted successfully.');
     
     }
@@ -112,6 +125,8 @@ class RoleController extends Controller  implements HasMiddleware
 
         $role = Role::findOrFail($roleId);
         $role->syncPermissions($request->permission);
+        $message = ': role get permissions Successfully!';
+        auth()->user()->notify(new Notifications($role,$message));
         
         return redirect()->back()->with('status', 'Permission Added to Role');
     

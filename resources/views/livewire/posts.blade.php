@@ -1,0 +1,4 @@
+
+<div>
+    posts livewire
+</div>

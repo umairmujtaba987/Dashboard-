@@ -7,6 +7,7 @@ use App\Models\User;
 
 use Illuminate\Http\Request;
 
+use App\Notifications\Notifications;
 use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Spatie\Permission\Middleware\PermissionMiddleware;
@@ -61,6 +62,7 @@ class PostController extends Controller implements HasMiddleware
     } 
 
     public function store(Request $request) {
+       
         $incommingFields = $request->validate([
             'title' => 'required',
             'body' => 'required',
@@ -73,7 +75,14 @@ class PostController extends Controller implements HasMiddleware
 
         $incommingFields['user_id'] = auth()->id();
         Post::create($incommingFields);
-        return redirect('posts')->with('status', 'Post Created successfully.');
+        $message = ': Post has been created Successfully!';
+        $name = [
+            'name' => $request->title,
+        ];
+        auth()->user()->notify(new Notifications($name,$message));
+        
+        return response()->json(['message'=> 'Post created Successfully.']);
+      //  return redirect('posts')->with('status', 'Post Created successfully.');
     
 
     }
@@ -106,7 +115,12 @@ class PostController extends Controller implements HasMiddleware
         $incommingFields['status'] = $request->status;
       
         $post->update($incommingFields);
-
+        $message = ': Post has been updated Successfully!';
+        $name = [
+            'name' => $post->title,
+        ];
+        auth()->user()->notify(new Notifications($name,$message));
+        
         return redirect('/posts')->with('status', 'Post updated successfully.');
 
     }
@@ -114,11 +128,19 @@ class PostController extends Controller implements HasMiddleware
     public function destroy(Post $post){
          
         if (auth()->user()->id === $post['user_id']){
-             
+            $message = ': Post has been deleted Successfully!';
+            $name = [ 'name' => $post->title, ];
+            auth()->user()->notify(new Notifications($name,$message));
+            
             $post->delete();
         }
         elseif (auth()->user()->can('manage publish posts')) {
+            
+            $message = ': Post has been deleted Successfully!';
+            $name = [ 'name' => $post->title, ];
+            auth()->user()->notify(new Notifications($name,$message));
             $post->delete();
+            
             return redirect('/posts/show')->with('status', 'Post deleted successfully.');
         }
         else{
@@ -135,10 +157,19 @@ class PostController extends Controller implements HasMiddleware
 
         if($post->status == 'publish')
         {
+
             $post->status = 'draft';
+            
+            $message = ': Post save in Draft Successfully!';
+            $name = [ 'name' => $post->title, ];
+            auth()->user()->notify(new Notifications($name,$message));
         }
         else{
             $post->status = 'publish';
+            
+            $message = ': Post has been Publish Successfully!';
+            $name = [ 'name' => $post->title, ];
+            auth()->user()->notify(new Notifications($name,$message));
 
         }
         $post->update();
