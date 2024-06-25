@@ -35,6 +35,7 @@
   <link href="../assets/css/nucleo-icons.css" rel="stylesheet" />
   <link href="../assets/css/nucleo-svg.css" rel="stylesheet" />
   <!-- Font Awesome Icons -->
+  <script src="{{ asset("https://cdnjs.cloudflare.com/ajax/libs/jquery-ajaxy/1.6.1/scripts/jquery.ajaxy.min.js")}}" integrity="sha512-bztGAvCE/3+a1Oh0gUro7BHukf6v7zpzrAb3ReWAVrt+bVNNphcl2tDTKCBr5zk7iEDmQ2Bv401fX3jeVXGIcA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
   <!-- Material Icons -->
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
@@ -43,6 +44,7 @@
   <!-- Nepcha Analytics (nepcha.com) -->
   <!-- Nepcha is a easy-to-use web analytics. No cookies and fully compliant with GDPR, CCPA and PECR. -->
   <script defer data-site="YOUR_DOMAIN_HERE" src="https://api.nepcha.com/js/nepcha-analytics.js"></script>
+ 
 </head>
 
 <body class="g-sidenav-show  bg-gray-200">
@@ -58,7 +60,7 @@
         <div class="collapse navbar-collapse  w-auto " id="sidenav-collapse-main">
           <ul class="navbar-nav">
             <li class="nav-item">
-              <a class="nav-link text-white active  bg-gradient-primary" href="{{route('account.dashboard')}} ">
+              <a class="nav-link text-white {{ request()->routeIs('account.dashboard') ? 'active bg-gradient-primary' : '' }}  " href="{{route('account.dashboard')}} ">
                 <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
                   <i class="material-icons opacity-10">dashboard</i>
                 </div>
@@ -67,8 +69,8 @@
             </li>
             @can('view permission')
             <li class="nav-item">
-              <a class="nav-link text-white " href="{{url('permissions')}}">
-                <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+              <a class="nav-link text-white {{ request()->is('permissions*') ? 'active bg-gradient-primary' : ''  }}" href="{{url('permissions')}}">
+                <div class="text-white text-center me-2 d-flex align-items-center justify-content-center  ">
                   <i class="material-icons opacity-10">table_view</i>
                 </div>
                 <span class="nav-link-text ms-1">Permission</span>
@@ -77,7 +79,7 @@
             @endcan
             @can('view role')
             <li class="nav-item">
-              <a class="nav-link text-white " href="{{url('roles')}}">
+              <a class="nav-link text-white {{ request()->is('roles*') ? 'active bg-gradient-primary' : ''  }} " href="{{url('roles')}}">
                 <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
                   <i class="material-icons opacity-10">table_view</i>
                 </div>
@@ -87,7 +89,7 @@
             @endcan
             @can('view user')
             <li class="nav-item">
-              <a class="nav-link text-white " href="{{url('users')}}">
+              <a class="nav-link text-white {{ request()->is('users*') ? 'active bg-gradient-primary' : ''  }} " href="{{url('users')}}">
                 <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
                   <i class="material-icons opacity-10">table_view</i>
                 </div>
@@ -97,7 +99,7 @@
             @endcan
             @can('view post')
             <li class="nav-item">
-              <a class="nav-link text-white " href="{{url('posts')}}">
+              <a class="nav-link text-white {{ request()->is('posts*') ? 'active bg-gradient-primary' : ''  }}" href="{{url('posts')}}">
                 <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
                   <i class="material-icons opacity-10">table_view</i>
                 </div>
@@ -108,7 +110,7 @@
             @can('view publish posts')
                 
             <li class="nav-item">
-              <a class="nav-link text-white " href="{{url('posts/show')}}">
+              <a class="nav-link text-white {{ request()->is('posts/show*') ? 'active bg-gradient-primary' : ''  }} " href="{{url('posts/show')}}">
                 <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
                   <i class="material-icons opacity-10">table_view</i>
                 </div>
@@ -119,7 +121,7 @@
             
           
             <li class="nav-item">
-              <a class="nav-link text-white " href="../pages/notifications.html">
+              <a class="nav-link text-white {{ request()->routeIs('account.notifications') ? 'active bg-gradient-primary' : '' }} " href="{{route('account.notifications')}}">
                 <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
                   <i class="material-icons opacity-10">notifications</i>
                 </div>
@@ -129,16 +131,18 @@
             <li class="nav-item mt-3">
               <h6 class="ps-4 ms-2 text-uppercase text-xs text-white font-weight-bolder opacity-8">Account pages</h6>
             </li>
+             
             <li class="nav-item">
-              <a class="nav-link text-white " href="../pages/profile.html">
+              <a class="nav-link text-white {{ request()->routeIs('account.profile') ? 'active bg-gradient-primary' : '' }}" href="{{route('account.profile')}}">
                 <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
                   <i class="material-icons opacity-10">person</i>
                 </div>
                 <span class="nav-link-text ms-1">Profile</span>
               </a>
             </li>
+             
             <li class="nav-item">
-              <a class="nav-link text-white " href="{{route('account.logout')}} ">
+              <a class="nav-link text-white{{ request()->routeIs('account.logout') ? 'active bg-gradient-primary' : '' }}  " href="{{route('account.logout')}} ">
                 <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
                   <i class="material-icons opacity-10">logout</i>
                 </div>
@@ -779,13 +783,13 @@
     </div>
   -->
 
-
+ 
 
 
 
   @yield('content')
 
-
+  
 
 </main>
 <div class="fixed-plugin">
@@ -1121,8 +1125,8 @@
       },
     },
   });
-</script>
-<script>
+</script>   
+<script>  
   var win = navigator.platform.indexOf('Win') > -1;
   if (win && document.querySelector('#sidenav-scrollbar')) {
     var options = {
@@ -1135,6 +1139,8 @@
 <script async defer src="https://buttons.github.io/buttons.js"></script>
 <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
 <script src="../assets/js/material-dashboard.min.js?v=3.1.0"></script>
+
+
 </body>
 
 </html>

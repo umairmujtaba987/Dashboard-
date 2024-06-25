@@ -27,7 +27,7 @@ class AdminMiddleware
             }
             abort(403,"User does not have correct Role");
         }
-        abort(401);
-       // return redirect('account/dashboard');
+        //abort(401);
+        return redirect('account/dashboard');
     }
 }

@@ -22,7 +22,18 @@ class DashboardController extends Controller
 
         ]);
     }
+    public function notifications(){
+        $notifications = auth()->user()->notifications;
+        return view('pages.notifications', compact('notifications'));
+    }
      
+    public function profile(){
+        $user = Auth::user();
+        return view('pages.profile',[
+            'user' => $user
+
+        ]);
+    }
      
     /*
     public function toggleStatus(User $user)

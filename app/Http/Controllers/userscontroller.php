@@ -8,18 +8,21 @@ use App\Models\User;
   
 use App\Mail\RegisterMail;  
 use Illuminate\Http\Request;
+use App\Events\NewNotifiaction;
 use Illuminate\Validation\Rule;
 use Spatie\Permission\Models\Role;
+use App\Notifications\Notifications;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Routing\Controllers\HasMiddleware;
 
-use Spatie\Permission\Middleware\PermissionMiddleware;
-
+use App\Notifications\NewUserNotification;
 use Illuminate\Routing\Controllers\Middleware;
+use Illuminate\Routing\Controllers\HasMiddleware;
 use App\Notifications\AccountActivatedNotification;  
+use Spatie\Permission\Middleware\PermissionMiddleware;
  
 class userscontroller extends Controller  implements HasMiddleware
 {
@@ -41,6 +44,9 @@ class userscontroller extends Controller  implements HasMiddleware
 
     public function index()
     {
+        
+        
+        
      $users = User::paginate(5);
      return view('pages.users.index',[
          'users' => $users
@@ -82,7 +88,8 @@ class userscontroller extends Controller  implements HasMiddleware
 
             $user->syncRoles($request->roles);
             $user->save(); 
-
+            $message = ':User has been created Successfully';
+             auth()->user()->notify(new Notifications($user,$message));
             return redirect('/users')->with("success","You have created user successfully with roles but first permission user verify user to access our system");
            
            
@@ -134,7 +141,8 @@ class userscontroller extends Controller  implements HasMiddleware
 
         $user->update($data); 
         $user->syncRoles($request->roles);
-         
+        $message = ':User has been updated Successfully!';
+        auth()->user()->notify(new Notifications($user,$message));
         return redirect('users')->with('status', 'user Updated successfully with roles.');
    
     }
@@ -143,8 +151,11 @@ class userscontroller extends Controller  implements HasMiddleware
         
         $user = User::findOrFail($userId);
         
+        $message = ':User has been deleted Successfully!';
+        auth()->user()->notify(new Notifications($user,$message));
         $user->delete();
-        return redirect('/users')->with('status', 'user Deleted successfully.');
+        
+        return redirect()->back()->with('status', 'user Deleted successfully.');
     
     }
 
@@ -159,7 +170,9 @@ class userscontroller extends Controller  implements HasMiddleware
             $user->status = 'active';
             $user->update();
             Mail::to($user->email)->send(new RegisterMail($user));
-      
+            
+            $message = ':User has been verify Successfully!';
+            auth()->user()->notify(new Notifications($user,$message));
             return back()->with('success', 'User verify successfully.');
         }
         else{

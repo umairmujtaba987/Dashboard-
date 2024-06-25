@@ -3,12 +3,14 @@
 namespace App\Http\Controllers;
  
 use Illuminate\Http\Request;
-use Spatie\Permission\Models\Permission; 
+use App\Notifications\Notifications;
 
-use Spatie\Permission\Middleware\PermissionMiddleware;
+use Spatie\Permission\Models\Permission; 
 
 use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Routing\Controllers\HasMiddleware;
+use Spatie\Permission\Middleware\PermissionMiddleware;
+
 class PermissionController extends Controller implements HasMiddleware  
 {
     
@@ -45,6 +47,9 @@ class PermissionController extends Controller implements HasMiddleware
         Permission::create([
             'name' => $request->name
         ]);
+        
+        $message = ': Permission has been created Successfully!'; 
+        auth()->user()->notify(new Notifications($request,$message));
         return redirect('permissions')->with('status', 'permission create sussfully.');
     }
 
@@ -71,13 +76,20 @@ class PermissionController extends Controller implements HasMiddleware
         $permission->update([
             'name' => $request->name
         ]);
+        
+        $message = ': Permission has been updated Successfully!'; 
+        auth()->user()->notify(new Notifications($permission,$message));
         return redirect('permissions')->with('status', 'permission Updated successfully.');
    
     }
 
     public function destroy($permissionId){
         $permission = Permission::find($permissionId);
+
         $permission->delete();
+        
+        $message = ': Permission has been deleted Successfully!'; 
+        auth()->user()->notify(new Notifications($permission,$message));
         return redirect('permissions')->with('status', 'permission Deleted successfully.');
     
     }

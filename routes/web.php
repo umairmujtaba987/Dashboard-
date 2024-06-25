@@ -1,7 +1,9 @@
 <?php
 
+use App\Livewire\TestPage;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ApiController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
@@ -11,10 +13,11 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\admin\LoginController as AdminLoginController;
 use App\Http\Controllers\admin\DashboardController as AdminDashboardController;
+use App\Livewire\Counter;
 
 
 
-
+Route::get('/counter', Counter::class);
  
 Route::get('/', [LoginController::class,'index'])->name('account.login')->middleware('guest');
 Route::group(['prefix'=>'account'],function(){
@@ -31,16 +34,22 @@ Route::group(['prefix'=>'account'],function(){
     Route::group(['middleware' => 'auth'],function(){
         
         Route::get('logout', [LoginController::class,'logout'])->name('account.logout');
+       
         Route::get('dashboard', [DashboardController::class,'index'])->name('account.dashboard');
-        Route::get('profile', [DashboardController::class,'profile'])->name('account.profile');
-        Route::get('userstable', [DashboardController::class,'usertable'])->name('account.users');
+       Route::get('profile', [DashboardController::class,'profile'])->name('account.profile');
+       //Route::get('profile', UserProfile::class)->name('account.profile');
+        
+       Route::get('userstable', [DashboardController::class,'usertable'])->name('account.users');
+        Route::get('notifications', [DashboardController::class,'notifications'])->name('account.notifications');
        
     });
 
 });
 
 //Route::group(['middleware' => ['role:super-admin|admin|user']],function(){
-Route::group(['middleware' => ['isAdmin']],function(){
+//Route::group(['middleware' => 'guest'],function(){
+    
+Route::group(['middleware' => ['isAdmin',]],function(){
 
 Route::resource('users', userscontroller::class);
 Route::get('users/{userId}/delete', [userscontroller::class, 'destroy']);
@@ -62,8 +71,10 @@ Route::resource('posts', PostController::class);
 Route::get('posts/{post}/delete', [PostController::class, 'destroy']);
 Route::get('posts/publishposts', [PostController::class, 'publish']);
 Route::get('posts/{post}/update_status', [PostController::class, 'update_status']);
+Route::POST('posts/creates', [PostController::class, 'store']);
 
 });
+//});
 /*
     Route::group(['prefix'=>'admin'],function(){
 
@@ -92,3 +103,6 @@ Route::get('posts/{post}/update_status', [PostController::class, 'update_status'
 });
 
 */
+
+Auth::routes();
+ 
